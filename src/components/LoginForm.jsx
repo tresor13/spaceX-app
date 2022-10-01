@@ -2,7 +2,14 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 import { setUser } from "../slices/userSlice.js";
 import { Link } from "react-router-dom";
 
@@ -15,21 +22,48 @@ function LoginForm() {
 
   const handleLogin = (email, password) => {
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-      .then(({ user }) => {
-        console.log(user);
-        dispatch(
-          setUser({
-            email: user.email,
-            id: user.uid,
-            token: user.accessToken,
-            name: user.displayName,
-            isAuthorized: user.auth._isInitialized,
+    setPersistence(auth, browserSessionPersistence)
+      .then(() => {
+        return signInWithEmailAndPassword(auth, email, password)
+          .then(({ user }) => {
+            const userColRef = doc(db, "users", user.uid);
+            getDoc(userColRef)
+              .then((userData) => {
+                dispatch(
+                  setUser({
+                    uid: user.uid,
+                    token: user.accessToken,
+                    isAuthorized: user.auth._isInitialized,
+                    profileData: userData.data(),
+                  })
+                );
+              })
+              .catch((err) => console.log(err));
+
+            navigate("/");
           })
-        );
-        navigate("/");
+          .catch(() => alert("Invalid user!"));
       })
-      .catch(() => alert("Invalid user!"));
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+
+    // signInWithEmailAndPassword(auth, email, password) // After user's login we pass user's data from Firebase server to state
+    //   .then(({ user }) => {
+    //     dispatch(
+    //       setUser({
+    //         email: user.email,
+    //         uid: user.uid,
+    //         token: user.accessToken,
+    //         name: user.displayName,
+    //         isAuthorized: user.auth._isInitialized,
+    //       })
+    //     );
+    //     navigate("/");
+    //   })
+    //   .catch(() => alert("Invalid user!"));
   };
   return (
     <div className="modal-dialog">

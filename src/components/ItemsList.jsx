@@ -50,18 +50,17 @@ function ItemsList() {
 
   const profileLink = (
     <li className="nav-item" style={{ width: "5em", margin: "0" }}>
-      <img
-        type="button"
-        src={profileIcon}
-        class="rounded mx-auto d-block img-fluid"
-        alt="profile"
-        data-bs-toggle="modal"
-        data-bs-target="#loginModal"
-        data-keyboard="false"
-        data-backdrop="static"
-      />
+      <Link to={`/profile`} className="nav-link" role={"button"}>
+        <img
+          type="button"
+          src={profileIcon}
+          class="rounded mx-auto d-block img-fluid"
+          alt="profile"
+        />
+      </Link>
     </li>
   );
+
   return (
     <nav
       className="navbar navbar-expand-lg navbar-dark bg-dark "
@@ -86,6 +85,7 @@ function ItemsList() {
             </div>
           </Link>
         </li>
+
         {ids.map((id, index) => {
           return (
             <li className="nav-item" key={index} style={styles.navItem}>
@@ -113,7 +113,8 @@ function ItemsList() {
             </li>
           );
         })}
-        {userState.isAuthorised ? profileLink : loginLink}
+
+        {userState.isAuthorized ? profileLink : loginLink}
       </ul>
     </nav>
   );
