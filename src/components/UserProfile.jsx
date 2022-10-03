@@ -29,9 +29,13 @@ function UserProfile() {
   // }, {});
 
   const saveChanges = () => {
-
     const userColRef = doc(db, "users", uid);
-    setDoc(userColRef, { name: newName ?? profileData.name, urlUserpick ?? profileData.urlUserpick, surname ?? profileData.surname, mobile ?? profileData.surname });
+    setDoc(userColRef, {
+      name: newName ?? profileData.name,
+      urlUserpick: urlUserpick || profileData.urlUserpick,
+      surname: surname ?? profileData.surname,
+      mobile: mobile ?? profileData.surname,
+    });
   };
 
   const logout = async () => {
