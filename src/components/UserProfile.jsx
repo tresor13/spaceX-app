@@ -22,25 +22,21 @@ function UserProfile({ profileData, uid }) {
     mobile: profileData.mobile,
     favourites: profileData.favourites,
   });
+
   const handleChangeValue = useCallback(
     (inputValue) => {
       onChangeValue({
         ...value,
         ...inputValue,
       });
-      console.log(value);
     },
     [value, onChangeValue]
   );
 
-  const rockets = ids.reduce((acc, rocketId) => {
-    return { ...acc, [rocketId]: false };
-  }, {});
-
   const saveChanges = () => {
-    // const userColRef = doc(db, "users", uid);
-    // setDoc(userColRef, value);
-    console.log(value);
+    const userColRef = doc(db, "users", uid);
+    setDoc(userColRef, value);
+    console.log(value, uid);
   };
 
   return (
@@ -122,12 +118,21 @@ function UserProfile({ profileData, uid }) {
                       <input
                         class="form-check-input"
                         type="checkbox"
-                        defaultChecked={profileData.favourites[id]}
+                        defaultChecked={
+                          profileData && profileData.favourites
+                            ? profileData.favourites[id]
+                            : false
+                        }
                         value=""
                         key={id}
                         id="flexCheckDefault"
                         onChange={(e) =>
-                          handleChangeValue({ [id]: e.target.checked })
+                          handleChangeValue({
+                            favourites: {
+                              ...value.favourites,
+                              [id]: e.target.checked,
+                            },
+                          })
                         }
                       />
                       <label
