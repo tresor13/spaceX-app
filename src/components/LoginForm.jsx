@@ -1,72 +1,13 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useContext } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { addDoc, collection, getDocs, doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase.js";
-import { auth } from "../firebase.js";
-
-import {
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  setPersistence,
-  browserSessionPersistence,
-} from "firebase/auth";
-import { setUser } from "../slices/userSlice.js";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import AuthContext from "../authContext.js";
 
 function LoginForm() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        const userColRef = doc(db, "users", currentUser.uid);
-        getDoc(userColRef)
-          .then((userData) => {
-            dispatch(
-              setUser({
-                uid: currentUser.uid,
-                token: currentUser.accessToken,
-                isAuthorized: currentUser.auth._isInitialized,
-                profileData: userData.data(),
-              })
-            );
-          })
-          .catch((err) => console.log(err));
-      }
-      return;
-    });
-  }, []);
-
-  const handleLogin = (email, password) => {
-    setPersistence(auth, browserSessionPersistence);
-    signInWithEmailAndPassword(auth, email, password) // Here we get respond from Firebase server with unique UID
-      .then(({ user }) => {
-        // We need it to make request to Firestore to collect the rest
-        const userColRef = doc(db, "users", user.uid); // of User data
-        getDoc(userColRef)
-          .then((userData) => {
-            // We combine information from both requests and dispatch it to state
-            dispatch(
-              setUser({
-                uid: user.uid,
-                token: user.accessToken,
-                isAuthorized: user.auth._isInitialized,
-                profileData: userData.data(),
-              })
-            );
-          })
-          .catch((err) => console.log(err));
-        navigate("/");
-      })
-      .catch(() => alert("Invalid user!"));
-  };
 
   return (
     <div className="modal-dialog">
@@ -127,7 +68,7 @@ function LoginForm() {
             type="button"
             className="btn btn-primary"
             data-bs-dismiss="modal"
-            onClick={() => handleLogin(email, pass)}
+            onClick={() => login(email, pass)}
           >
             Login
           </button>

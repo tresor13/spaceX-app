@@ -1,50 +1,48 @@
-import React from "react";
+import React, { useContext, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { db } from "../firebase.js";
-import { auth } from "../firebase.js";
 import { setDoc, collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { removeUser } from "../slices/userSlice.js";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
+import AuthContext from "../authContext.js";
 
 const defaultUserpic =
   "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg";
 
-function UserProfile() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const { profileData, uid } = useSelector((state) => state.userReducer);
+function UserProfile({ profileData, uid }) {
+  const { logout } = useContext(AuthContext);
   const { ids, entities } = useSelector((state) => state.rocketsReducer);
 
-  const [newName, setName] = useState("");
-  const [urlUserpick, setUrl] = useState("");
-  const [surname, setSurname] = useState("");
-  const [mobile, setMobile] = useState("");
-  // const [favourites, setFavourites] = useState();
+  const [value, onChangeValue] = useState({
+    name: profileData.name,
+    surname: profileData.surname,
+    urlUserpick: profileData.urlUserpick,
+    mobile: profileData.mobile,
+    favourites: profileData.favourites,
+  });
+  const handleChangeValue = useCallback(
+    (inputValue) => {
+      onChangeValue({
+        ...value,
+        ...inputValue,
+      });
+      console.log(value);
+    },
+    [value, onChangeValue]
+  );
 
-  // const rockets = ids.reduce((acc, rocketId) => {
-  //   return (acc[rocketId] = false);
-  // }, {});
+  const rockets = ids.reduce((acc, rocketId) => {
+    return { ...acc, [rocketId]: false };
+  }, {});
 
   const saveChanges = () => {
-    const userColRef = doc(db, "users", uid);
-    setDoc(userColRef, {
-      name: newName ?? profileData.name,
-      urlUserpick: urlUserpick || profileData.urlUserpick,
-      surname: surname ?? profileData.surname,
-      mobile: mobile ?? profileData.surname,
-    });
+    // const userColRef = doc(db, "users", uid);
+    // setDoc(userColRef, value);
+    console.log(value);
   };
 
-  const logout = async () => {
-    console.log(newName, urlUserpick, surname, mobile);
-    // await signOut(auth);
-    // dispatch(removeUser);
-    // navigate("/");
-    // window.location.reload();
-  };
   return (
     <div className="container rounded bg-white mt-5 mb-5">
       <div className="row">
@@ -73,7 +71,7 @@ function UserProfile() {
                   type="text"
                   className="form-control"
                   placeholder={profileData?.name ?? "Name"}
-                  onChange={(e) => setName(e.target.value ?? profileData.name)}
+                  onChange={(e) => handleChangeValue({ name: e.target.value })}
                 />
               </div>
               <div className="col-md-6">
@@ -83,7 +81,7 @@ function UserProfile() {
                   className="form-control"
                   placeholder={profileData?.surname ?? "Surname"}
                   onChange={(e) =>
-                    setSurname(e.target.value ?? profileData.surname)
+                    handleChangeValue({ surname: e.target.value })
                   }
                 />
               </div>
@@ -97,7 +95,7 @@ function UserProfile() {
                   className="form-control"
                   placeholder={profileData?.mobile ?? "0000000000"}
                   onChange={(e) =>
-                    setMobile(e.target.value ?? profileData.mobile)
+                    handleChangeValue({ mobile: e.target.value })
                   }
                 />
               </div>
@@ -109,7 +107,7 @@ function UserProfile() {
                   className="form-control"
                   placeholder={profileData?.urlUserpick ?? defaultUserpic}
                   onChange={(e) =>
-                    setUrl(e.target.value ?? profileData.urlUserpick)
+                    handleChangeValue({ urlUserpick: e.target.value })
                   }
                 />
               </div>
@@ -118,16 +116,19 @@ function UserProfile() {
               <div class="form-check">
                 <label className="labels">Your favourite Dragons</label>
                 <br />
-                {/* {ids.map((id) => {
+                {ids.map((id) => {
                   return (
                     <div class="form-check py-2">
                       <input
                         class="form-check-input"
                         type="checkbox"
-                        defaultChecked={favourites[id]}
+                        defaultChecked={profileData.favourites[id]}
                         value=""
+                        key={id}
                         id="flexCheckDefault"
-                        onChange={console.log(rockets)}
+                        onChange={(e) =>
+                          handleChangeValue({ [id]: e.target.checked })
+                        }
                       />
                       <label
                         class="form-check-label text-secondary"
@@ -137,7 +138,7 @@ function UserProfile() {
                       </label>
                     </div>
                   );
-                })} */}
+                })}
               </div>
             </div>
             <div className="mt-5 text-center">

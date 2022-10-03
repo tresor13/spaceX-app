@@ -3,20 +3,23 @@ import RocketForm from "./RocketForm";
 import HomePage from "./HomePage";
 import ItemsList from "./ItemsList";
 import RegisterForm from "./RegisterForm";
-import UserProfile from "./UserProfile";
+import { AuthProvider } from "../authContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ProfileContainer from "./ProfileContainer";
 
 function AppRouter() {
   return (
     <div className="router">
       <Router>
-        <ItemsList />
-        <Routes>
-          <Route path={`/:id`} element={<RocketForm />}></Route>
-          <Route path="/" exact element={<HomePage />}></Route>
-          <Route path="/register" element={<RegisterForm />}></Route>
-          <Route path="/profile" element={<UserProfile />}></Route>
-        </Routes>
+        <AuthProvider>
+          <ItemsList />
+          <Routes>
+            <Route path={`/:id`} element={<RocketForm />}></Route>
+            <Route path="/" exact element={<HomePage />}></Route>
+            <Route path="/register" element={<RegisterForm />}></Route>
+            <Route path="/profile" element={<ProfileContainer />}></Route>
+          </Routes>
+        </AuthProvider>
       </Router>
     </div>
   );
