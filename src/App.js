@@ -15,6 +15,7 @@ function App() {
     };
     fetchData();
   }, [dispatch]);
+
   return (
     <div className="App">
       <AppRouter />

@@ -4,14 +4,17 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addDoc, collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase.js";
+import { auth } from "../firebase.js";
+
 import {
-  getAuth,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   setPersistence,
   browserSessionPersistence,
 } from "firebase/auth";
 import { setUser } from "../slices/userSlice.js";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 function LoginForm() {
   const dispatch = useDispatch();
@@ -20,51 +23,51 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
-  const handleLogin = (email, password) => {
-    const auth = getAuth();
-    setPersistence(auth, browserSessionPersistence)
-      .then(() => {
-        return signInWithEmailAndPassword(auth, email, password)
-          .then(({ user }) => {
-            const userColRef = doc(db, "users", user.uid);
-            getDoc(userColRef)
-              .then((userData) => {
-                dispatch(
-                  setUser({
-                    uid: user.uid,
-                    token: user.accessToken,
-                    isAuthorized: user.auth._isInitialized,
-                    profileData: userData.data(),
-                  })
-                );
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        const userColRef = doc(db, "users", currentUser.uid);
+        getDoc(userColRef)
+          .then((userData) => {
+            dispatch(
+              setUser({
+                uid: currentUser.uid,
+                token: currentUser.accessToken,
+                isAuthorized: currentUser.auth._isInitialized,
+                profileData: userData.data(),
               })
-              .catch((err) => console.log(err));
-
-            navigate("/");
+            );
           })
-          .catch(() => alert("Invalid user!"));
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+          .catch((err) => console.log(err));
+      }
+      return;
+    });
+  }, []);
 
-    // signInWithEmailAndPassword(auth, email, password) // After user's login we pass user's data from Firebase server to state
-    //   .then(({ user }) => {
-    //     dispatch(
-    //       setUser({
-    //         email: user.email,
-    //         uid: user.uid,
-    //         token: user.accessToken,
-    //         name: user.displayName,
-    //         isAuthorized: user.auth._isInitialized,
-    //       })
-    //     );
-    //     navigate("/");
-    //   })
-    //   .catch(() => alert("Invalid user!"));
+  const handleLogin = (email, password) => {
+    setPersistence(auth, browserSessionPersistence);
+    signInWithEmailAndPassword(auth, email, password) // Here we get respond from Firebase server with unique UID
+      .then(({ user }) => {
+        // We need it to make request to Firestore to collect the rest
+        const userColRef = doc(db, "users", user.uid); // of User data
+        getDoc(userColRef)
+          .then((userData) => {
+            // We combine information from both requests and dispatch it to state
+            dispatch(
+              setUser({
+                uid: user.uid,
+                token: user.accessToken,
+                isAuthorized: user.auth._isInitialized,
+                profileData: userData.data(),
+              })
+            );
+          })
+          .catch((err) => console.log(err));
+        navigate("/");
+      })
+      .catch(() => alert("Invalid user!"));
   };
+
   return (
     <div className="modal-dialog">
       <div className="modal-content">
@@ -96,6 +99,7 @@ function LoginForm() {
             </label>
             <div className="col-sm-10">
               <input
+                value={email}
                 type="email"
                 className="form-control"
                 id="inputEmail"
@@ -109,6 +113,7 @@ function LoginForm() {
             </label>
             <div className="col-sm-10">
               <input
+                value={pass}
                 type="password"
                 className="form-control"
                 id="inputPassword"

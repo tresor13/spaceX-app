@@ -1,9 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
 
 function HomePage() {
-  const userState = useSelector((state) => state.userReducer);
-  console.log(userState);
   return (
     <div
       className="container-fluid d-flex flex-column mb-3 d-flex justify-content-start"
@@ -26,7 +23,6 @@ function HomePage() {
         <div className="card-body">
           <h5 className="card-title fs-2 badge bg-secondary text-wrap text-white fw-bold">
             Welcome to SpaceX
-            {userState.isAuthorized ? `, ${userState.name}` : null}!
           </h5>
           <h6 className="card-subtitle mb-2 text-light text-opacity-50 ">
             {" "}

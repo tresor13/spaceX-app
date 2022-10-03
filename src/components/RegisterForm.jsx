@@ -2,11 +2,8 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../firebase.js";
 import { doc, setDoc } from "firebase/firestore";
 
 import { db } from "../firebase.js";
@@ -22,7 +19,6 @@ function RegisterForm() {
 
   const handleRegister = (email, password) => {
     isValid(email, password);
-    const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password) // Creating user in Firebase
       .then(function ({ user }) {
         updateProfile(user, {
