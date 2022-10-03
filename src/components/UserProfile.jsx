@@ -8,9 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import AuthContext from "../authContext.js";
 
-const defaultUserpic =
-  "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg";
-
 function UserProfile({ profileData, uid }) {
   const { logout } = useContext(AuthContext);
   const { ids, entities } = useSelector((state) => state.rocketsReducer);
@@ -18,9 +15,10 @@ function UserProfile({ profileData, uid }) {
   const [value, onChangeValue] = useState({
     name: profileData.name,
     surname: profileData.surname,
-    urlUserpick: profileData.urlUserpick,
+    urlUserpic: profileData.urlUserpic,
     mobile: profileData.mobile,
     favourites: profileData.favourites,
+    default: false,
   });
 
   const handleChangeValue = useCallback(
@@ -36,7 +34,7 @@ function UserProfile({ profileData, uid }) {
   const saveChanges = () => {
     const userColRef = doc(db, "users", uid);
     setDoc(userColRef, value);
-    console.log(value, uid);
+    console.log(profileData, value);
   };
 
   return (
@@ -48,7 +46,7 @@ function UserProfile({ profileData, uid }) {
               alt="userpic"
               className="rounded-circle mt-5"
               width="150px"
-              src={profileData?.urlUserpick || defaultUserpic}
+              src={profileData.urlUserpic ?? value.urlUserpic}
             />
 
             <span> </span>
@@ -66,7 +64,7 @@ function UserProfile({ profileData, uid }) {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder={profileData?.name ?? "Name"}
+                  placeholder={profileData.name ?? value.name}
                   onChange={(e) => handleChangeValue({ name: e.target.value })}
                 />
               </div>
@@ -75,7 +73,7 @@ function UserProfile({ profileData, uid }) {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder={profileData?.surname ?? "Surname"}
+                  placeholder={profileData.surname ?? value.surname}
                   onChange={(e) =>
                     handleChangeValue({ surname: e.target.value })
                   }
@@ -89,7 +87,7 @@ function UserProfile({ profileData, uid }) {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder={profileData?.mobile ?? "0000000000"}
+                  placeholder={profileData.mobile ?? value.mobile}
                   onChange={(e) =>
                     handleChangeValue({ mobile: e.target.value })
                   }
@@ -101,9 +99,9 @@ function UserProfile({ profileData, uid }) {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder={profileData?.urlUserpick ?? defaultUserpic}
+                  placeholder={profileData.urlUserpic ?? value.urlUserpic}
                   onChange={(e) =>
-                    handleChangeValue({ urlUserpick: e.target.value })
+                    handleChangeValue({ urlUserpic: e.target.value })
                   }
                 />
               </div>

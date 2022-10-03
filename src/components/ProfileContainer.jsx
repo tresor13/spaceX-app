@@ -5,7 +5,9 @@ const ProfileContainer = () => {
   const { profileData, uid } = useSelector((state) => state.userReducer);
   return (
     <div>
-      {profileData ? <UserProfile profileData={profileData} uid={uid} /> : null}
+      {profileData.default ? null : (
+        <UserProfile profileData={profileData} uid={uid} />
+      )}
     </div>
   );
 };
