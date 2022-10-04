@@ -8,4 +8,4 @@ jobs:
       - name: npm install
         run: npm install
       - name: Run Linter
-        run: npm run lint
+        run: npx eslint .
