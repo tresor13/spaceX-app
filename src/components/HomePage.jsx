@@ -3,14 +3,7 @@ import React from "react";
 function HomePage() {
   return (
     <div className="container-fluid d-flex flex-column mb-3 d-flex justify-content-start home-page-container">
-      <div
-        className="card border border-white"
-        style={{
-          width: "35rem",
-          backgroundColor: "rgba(117, 190, 218, 0)",
-          margin: "30px 30px",
-        }}
-      >
+      <div className="card border border-white welcome-card">
         <div className="card-body">
           <h5 className="card-title fs-2 badge bg-secondary text-wrap text-white fw-bold">
             Welcome to SpaceX

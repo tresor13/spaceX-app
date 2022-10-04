@@ -28,3 +28,65 @@ code {
   height: 980px;
   padding: 0;
 }
+@media (max-width: 412px) {
+  .home-page-container {
+    height: auto;
+    align-items: center;
+  }
+  .welcome-card {
+    width: 90%;
+    background-color: rgba(117, 190, 218, 0);
+    margin: 30px 30px;
+  }
+  .nav-item {
+    width: auto;
+    height: 100px;
+    overflow: hidden;
+  }
+  #login-profile-link {
+    margin: 0;
+    width: 100px;
+  }
+  .carousel-item {
+    height: auto;
+  }
+}
+@media all and (min-width: 413px) and (max-width: 991px) {
+  .welcome-card {
+    width: 80%;
+    background-color: rgba(117, 190, 218, 0);
+    margin: 30px 30px;
+  }
+  .nav-item {
+    width: auto;
+    height: 100px;
+    overflow: hidden;
+  }
+  #login-profile-link {
+    margin: 0;
+    width: 100px;
+  }
+  .carousel-item {
+    height: 400px;
+  }
+}
+
+@media (min-width: 992px) {
+  .welcome-card {
+    width: 50%;
+    background-color: rgba(117, 190, 218, 0);
+    margin: 30px 30px;
+  }
+  #login-profile-link {
+    margin: 0;
+    width: 300px;
+  }
+  .nav-item {
+    width: fit-content;
+    height: 100px;
+    overflow: hidden;
+  }
+  .carousel-item {
+    height: 450px;
+  }
+}

@@ -7,7 +7,7 @@ const Slider = ({ urls }) => {
     <Carousel>
       {urls.map((url, i) => {
         return (
-          <Carousel.Item style={{ height: "450px" }} key={i}>
+          <Carousel.Item key={i}>
             <img
               alt="spacecraft"
               className="d-block w-100 rounded"

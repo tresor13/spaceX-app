@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../authContext.js";
 
+/* LoginForm is a modal form, user can insert registered email and password and login
+or go to Registration page via link  */
+
 function LoginForm() {
   const { login } = useContext(AuthContext);
 

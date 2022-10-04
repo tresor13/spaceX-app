@@ -6,11 +6,11 @@ import profileIcon from "../images/profile.png";
 import LoginForm from "./LoginForm.jsx";
 
 const styles = {
-  navItem: {
-    width: "30em",
-    height: "6em",
-    overflow: "hidden",
-  },
+  // navItem: {
+  //   width: "30em",
+  //   height: "6em",
+  //   overflow: "hidden",
+  // },
   imgOverlayText: { top: "0.5em" },
   iconImg: { objectFit: "contain" },
   navBar: { padding: "0" },
@@ -39,7 +39,7 @@ function NavBar() {
   /* The last link in the NavBar is a link to the Login form if the user is not logged in,
    or to the User Profile if the user is logged in. */
   const loginLink = (
-    <li className="nav-item" style={{ width: "5em", margin: "0" }}>
+    <li className="nav-item" id="login-profile-link">
       <img
         type="button"
         src={registrationIcon}
@@ -62,9 +62,9 @@ function NavBar() {
       </div>
     </li>
   );
-
+  // style={{ width: "5em", margin: "0" }}
   const profileLink = (
-    <li className="nav-item" style={{ width: "5em", margin: "0" }}>
+    <li className="nav-item " id="login-profile-link">
       <Link to={`/profile`} className="nav-link" role={"button"}>
         <img
           type="button"
@@ -82,7 +82,7 @@ function NavBar() {
       style={styles.navBar}
     >
       <ul className="container-fluid d-flex justify-content-around mb-0">
-        <li className="nav-item" style={styles.navItem}>
+        <li className="nav-item">
           <Link to={`/`} className="nav-link" role={"button"}>
             <div className="card bg-dark text-white d-flex">
               <img
