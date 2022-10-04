@@ -6,6 +6,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: npm install
-        run: make install
+        run: npm install
       - name: Run Linter
-        run: make lint
+        run: npm run lint
