@@ -2,16 +2,7 @@ import React from "react";
 
 function HomePage() {
   return (
-    <div
-      className="container-fluid d-flex flex-column mb-3 d-flex justify-content-start"
-      style={{
-        backgroundImage: `url("https://images5.alphacoders.com/102/thumb-1920-1020666.jpg")`,
-        backgroundRepeat: "no-repeat",
-        height: "980px",
-        width: "auto",
-        padding: "0",
-      }}
-    >
+    <div className="container-fluid d-flex flex-column mb-3 d-flex justify-content-start home-page-container">
       <div
         className="card border border-white"
         style={{
