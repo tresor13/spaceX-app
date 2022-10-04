@@ -1,0 +1,11 @@
+name: linter
+on: push
+jobs:
+  my-job:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: npm install
+        run: make install
+      - name: Run Linter
+        run: make lint

@@ -15,14 +15,29 @@ const styles = {
   iconImg: { objectFit: "contain" },
   navBar: { padding: "0" },
 };
-const homeIcon =
+
+const homeIconPic =
   "https://img.freepik.com/premium-photo/milky-way-galaxy-with-stars-and-space-dust-in-the-universe_33900-3.jpg?w=2000";
 
-function ItemsList() {
+/* NavBar consists of links to:
+  1. HomePage
+  2. Dragon Pages
+  3. LoginForm or User Profile */
+
+function NavBar() {
   const userState = useSelector((state) => state.userReducer);
   const { ids, entities } = useSelector((state) => state.rocketsReducer);
-  const previewPictures = ids.map((id) => entities[id].images[0]); //index 0 - just to pick first url in array of urls
 
+  if (ids.length === 0) {
+    return null;
+  }
+  /* Index 0 - just to pick first url in array of urls 
+  if url doesn't exist preview picture will be replaced by homeIconPic 
+  previewPictures are needed to make a Link to dragons pages*/
+  const previewPictures = ids.map((id) => entities[id].images[0]);
+
+  /* The last link in the NavBar is a link to the Login form if the user is not logged in,
+   or to the User Profile if the user is logged in. */
   const loginLink = (
     <li className="nav-item" style={{ width: "5em", margin: "0" }}>
       <img
@@ -71,7 +86,7 @@ function ItemsList() {
           <Link to={`/`} className="nav-link" role={"button"}>
             <div className="card bg-dark text-white d-flex">
               <img
-                src={homeIcon}
+                src={homeIconPic}
                 className="card-img"
                 alt="space"
                 style={styles.iconImg}
@@ -79,6 +94,7 @@ function ItemsList() {
               <div
                 className="card-img-overlay fs-2"
                 style={styles.imgOverlayText}
+                data-testid="home-link"
               >
                 Home
               </div>
@@ -86,37 +102,39 @@ function ItemsList() {
           </Link>
         </li>
 
-        {ids.map((id, index) => {
-          return (
-            <li className="nav-item" key={index} style={styles.navItem}>
-              <Link
-                key={index}
-                to={`/${id}`}
-                className="nav-link"
-                role={"button"}
-              >
-                <div className="card bg-dark text-white">
-                  <img
-                    src={previewPictures[index]}
-                    className="card-img"
-                    alt="spaceCraft"
-                    style={{ objectFit: "cover" }}
-                  />
-                  <div
-                    className="card-img-overlay fs-2"
-                    style={styles.imgOverlayText}
+        {ids.length > 0
+          ? ids.map((id, index) => {
+              return (
+                <li className="nav-item" key={index} style={styles.navItem}>
+                  <Link
+                    key={index}
+                    to={`/${id}`}
+                    className="nav-link"
+                    role={"button"}
                   >
-                    {entities[id].name}
-                  </div>
-                </div>
-              </Link>
-            </li>
-          );
-        })}
+                    <div className="card bg-dark text-white">
+                      <img
+                        src={previewPictures[index] ?? homeIconPic}
+                        className="card-img"
+                        alt="spaceCraft"
+                        style={{ objectFit: "cover" }}
+                      />
+                      <div
+                        className="card-img-overlay fs-2"
+                        style={styles.imgOverlayText}
+                      >
+                        {entities[id].name}
+                      </div>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })
+          : null}
 
         {userState.isAuthorized ? profileLink : loginLink}
       </ul>
     </nav>
   );
 }
-export default ItemsList;
+export default NavBar;
