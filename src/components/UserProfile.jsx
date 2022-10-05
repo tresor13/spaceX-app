@@ -5,6 +5,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase.js";
 
 import AuthContext from "../authContext.js";
+import profileDataValidator from "../utils/profileDataValidator.js";
 
 function UserProfile({ profileData, uid }) {
   const { logout } = useContext(AuthContext);
@@ -30,9 +31,12 @@ function UserProfile({ profileData, uid }) {
   );
 
   const saveChanges = () => {
+    const validatedData = profileDataValidator(userInputData);
+    if (validatedData === false) {
+      return;
+    }
     const userColRef = doc(db, "users", uid);
-    setDoc(userColRef, userInputData);
-    console.log(profileData, userInputData);
+    setDoc(userColRef, validatedData).then(() => window.location.reload());
   };
 
   return (

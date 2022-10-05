@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
         })
         .catch(() => alert("Invalid user!"));
     },
-    [auth]
+    [auth, dispatch, navigate]
   );
 
   const logout = useCallback(() => {
@@ -72,15 +72,19 @@ export const AuthProvider = ({ children }) => {
       dispatch(removeUser());
       navigate("/");
     });
-  }, [auth]);
+  }, [auth, dispatch, navigate]);
 
-  const value = {
+  const authDataContext = {
     auth,
     logout,
     login,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={authDataContext}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthContext;
