@@ -67,7 +67,7 @@ The AppRouter component contains paths to such components:
 
 The links to the routes are in the NavBar Component. NavBar renders a list of links to the Home, Login and Dragon Pages.
 Links are the React Router components that are represented as pictures.
-Because the list of Dragons is small, then this representation seemed optimal to me. Of course, if the list grows enough, then the NavBar will have to be converted to a regular list of links.
+Because the list of Dragons is small, then this representation seemed optimal to me. Of course, if the list grows enough, then the NavBar will have to be converted to a regular list of links or implement Pagination with react for example.
 
 Login Form is a modal form which pops up when you click on the login button: ![Login Button](https://i.ibb.co/zs9G3cD/2022-10-05-12-46-33.png)
 
