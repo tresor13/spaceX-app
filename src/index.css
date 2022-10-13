@@ -82,7 +82,7 @@ code {
     width: 300px;
   }
   .nav-item {
-    width: fit-content;
+    width: 100%;
     height: 100px;
     overflow: hidden;
   }

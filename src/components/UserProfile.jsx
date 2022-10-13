@@ -1,14 +1,11 @@
 import React, { useContext, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../firebase.js";
 
-import AuthContext from "../authContext.js";
-import profileDataValidator from "../utils/profileDataValidator.js";
+import AuthContext from "../context/authContext.js";
 
 function UserProfile({ profileData, uid }) {
-  const { logout } = useContext(AuthContext);
+  const { logout, errors, saveChanges } = useContext(AuthContext);
   const { ids, entities } = useSelector((state) => state.rocketsReducer);
 
   const [userInputData, setUserInputData] = useState({
@@ -30,14 +27,6 @@ function UserProfile({ profileData, uid }) {
     [userInputData, setUserInputData]
   );
 
-  const saveChanges = () => {
-    const validatedData = profileDataValidator(userInputData);
-    if (validatedData === false) {
-      return;
-    }
-    const userColRef = doc(db, "users", uid);
-    setDoc(userColRef, validatedData).then(() => window.location.reload());
-  };
 
   return (
     <div className="container rounded bg-white mt-5 mb-5">
@@ -70,6 +59,7 @@ function UserProfile({ profileData, uid }) {
                   placeholder={profileData.name ?? userInputData.name}
                   onChange={(e) => handleChangeValue({ name: e.target.value })}
                 />
+                {errors.name ? <div>{errors.name}</div> : null}
               </div>
               <div className="col-md-6">
                 <label className="labels">Surname</label>
@@ -82,6 +72,7 @@ function UserProfile({ profileData, uid }) {
                     handleChangeValue({ surname: e.target.value })
                   }
                 />
+                {errors.surname ? <div>{errors.surname}</div> : null}
               </div>
             </div>
 
@@ -97,6 +88,7 @@ function UserProfile({ profileData, uid }) {
                     handleChangeValue({ mobile: e.target.value })
                   }
                 />
+                {errors.mobile ? <div>{errors.mobile}</div> : null}
               </div>
 
               <div className="col-md-12">
@@ -112,6 +104,7 @@ function UserProfile({ profileData, uid }) {
                     handleChangeValue({ urlUserpic: e.target.value })
                   }
                 />
+                {errors.urlUserpic ? <div>{errors.urlUserpic}</div> : null}
               </div>
 
               <div className="col-md-12"></div>
@@ -156,7 +149,7 @@ function UserProfile({ profileData, uid }) {
               <button
                 className="btn btn-primary profile-button"
                 type="button"
-                onClick={() => saveChanges()}
+                onClick={() => saveChanges(userInputData, uid)}
               >
                 Save Profile
               </button>

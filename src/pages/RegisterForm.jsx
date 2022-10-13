@@ -5,11 +5,11 @@ import { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
-import { db } from "../firebase.js";
+import { db } from "../utils/firebase.js";
 
 import isValid from "../utils/emailPasswordValidator.js";
 import { useContext } from "react";
-import AuthContext from "../authContext.js";
+import AuthContext from "../context/authContext.js";
 
 function RegisterForm() {
   const navigate = useNavigate();

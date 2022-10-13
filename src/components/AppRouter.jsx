@@ -1,14 +1,14 @@
 import React from "react";
-import RocketForm from "./RocketForm";
-import HomePage from "./HomePage";
-import NavBar from "./NavBar";
-import RegisterForm from "./RegisterForm";
-/*AuthProvider is a component that passes access to the authorization session to children. 
-Because the session is accessed at different levels (for login, for logout, for sending data to the server, 
+import RocketForm from "../pages/RocketForm";
+import HomePage from "../pages/HomePage";
+import NavBar from "../container/NavBar";
+import RegisterForm from "../pages/RegisterForm";
+/*AuthProvider is a component that passes access to the authorization session to children.
+Because the session is accessed at different levels (for login, for logout, for sending data to the server,
 updating the user). */
-import { AuthProvider } from "../authContext";
+import { AuthProvider } from "../context/authContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ProfileContainer from "./ProfileContainer";
+import ProfileContainer from "../pages/ProfileContainer";
 
 function AppRouter() {
   return (

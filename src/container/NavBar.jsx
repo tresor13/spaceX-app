@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import registrationIcon from "../images/log-in.png";
 import profileIcon from "../images/profile.png";
-import LoginForm from "./LoginForm.jsx";
+import LoginForm from "../components/LoginForm.jsx";
 
 const styles = {
   // navItem: {
@@ -31,8 +31,8 @@ function NavBar() {
   if (ids.length === 0) {
     return null;
   }
-  /* Index 0 - just to pick first url in array of urls 
-  if url doesn't exist preview picture will be replaced by homeIconPic 
+  /* Index 0 - just to pick first url in array of urls
+  if url doesn't exist preview picture will be replaced by homeIconPic
   previewPictures are needed to make a Link to dragons pages*/
   const previewPictures = ids.map((id) => entities[id].images[0]);
 
@@ -102,7 +102,7 @@ function NavBar() {
           </Link>
         </li>
 
-        {ids.length > 0
+        {ids.length
           ? ids.map((id, index) => {
               return (
                 <li className="nav-item" key={index} style={styles.navItem}>

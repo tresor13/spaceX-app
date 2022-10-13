@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import store from "./slices/store.js";
 import { Provider } from "react-redux";
-import "./firebase.js";
+import "./utils/firebase.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

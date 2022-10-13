@@ -1,27 +1,20 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
-import { actions as rocketsActions } from "../slices/rocketsSlice.js";
-
+import { useSelector } from "react-redux";
 import { Container, Row, Col, Card } from "react-bootstrap";
-import Slider from "./Slider.jsx";
+import Slider from "../components/Slider.jsx";
+import useRequestDragons from "../hooks/useRequestDragons";
 
 const RocketForm = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
+  const { fetchDragon } = useRequestDragons();
   const rocket = useSelector((state) => state.rocketsReducer.entities[id]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      await axios
-        .get(`https://api.spacexdata.com/v4/dragons/${id}`)
-        .then((response) =>
-          dispatch(rocketsActions.updateRocket(response.data))
-        );
-    };
-    fetchData();
-  }, [dispatch, id]);
+    fetchDragon(id);
+  }, [id, fetchDragon]);
+
   return !rocket ? null : (
     <Container style={{ marginTop: "20px" }}>
       <Row>

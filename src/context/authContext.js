@@ -1,4 +1,4 @@
-import React, { createContext, useCallback } from "react";
+import React, {createContext, useCallback, useState} from "react";
 import {
   browserSessionPersistence,
   getAuth,
@@ -7,9 +7,10 @@ import {
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "./firebase";
-import { removeUser, setUser } from "./slices/userSlice";
+import {doc, getDoc, updateDoc} from "firebase/firestore";
+import { db } from "../utils/firebase";
+import {removeUser, setUser, updateUserProfileData} from "../slices/userSlice";
+import profileDataValidator from "../utils/profileDataValidator";
 
 const AuthContext = createContext({
   auth: {},
@@ -19,10 +20,12 @@ const AuthContext = createContext({
 export const AuthProvider = ({ children }) => {
   const auth = getAuth();
   const dispatch = useDispatch();
+  const [ errors, onChangeErrors ] = useState({});
   const navigate = useNavigate();
 
   auth.onAuthStateChanged((currentUser) => {
     if (currentUser) {
+      console.log(currentUser);
       const userColRef = doc(db, "users", currentUser.uid);
       getDoc(userColRef)
         .then((userData) => {
@@ -58,9 +61,12 @@ export const AuthProvider = ({ children }) => {
                   profileData: userData.data(),
                 })
               );
+              navigate("/");
             })
-            .catch((err) => console.log(err));
-          navigate("/");
+            .catch((err) => {
+              console.log(err);
+              navigate("/");
+            });
         })
         .catch(() => alert("Invalid user!"));
     },
@@ -74,8 +80,25 @@ export const AuthProvider = ({ children }) => {
     });
   }, [auth, dispatch, navigate]);
 
+
+  const saveChanges = useCallback((userInputData, uid) => {
+    onChangeErrors({});
+    const validatedData = profileDataValidator(userInputData);
+    if (validatedData.hasErrors) {
+      onChangeErrors(validatedData.errors);
+      return;
+    }
+    const userColRef = doc(db, "users", uid);
+    updateDoc(userColRef, validatedData.user)
+      .then(() => {
+        dispatch(updateUserProfileData(validatedData.user));
+      });
+  }, [dispatch]);
+
   const authDataContext = {
     auth,
+    errors,
+    saveChanges,
     logout,
     login,
   };

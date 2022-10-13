@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 /* The initial state should reflect the structure of the expected state after it is loaded from the server.
-The state is filled with default values ​​so the application accesses data when rendering if 
+The state is filled with default values ​​so the application accesses data when rendering if
 the user is new and has not yet fullfill it in on his own. So this will prevent from errors. */
 
 /*The state consists of 2 parts - user authentication information coming from the Firebase server (uid, token, isAuthorized)
@@ -31,6 +31,9 @@ const userSlice = createSlice({
       state.isAuthorized = action.payload.isAuthorized;
       state.profileData = action.payload.profileData;
     },
+    updateUserProfileData(state, action) {
+      state.profileData = action.payload;
+    },
     removeUser(state) {
       state.token = null;
       state.uid = null;
@@ -40,6 +43,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, removeUser } = userSlice.actions;
+export const { setUser, removeUser, updateUserProfileData } = userSlice.actions;
 
 export default userSlice.reducer;
